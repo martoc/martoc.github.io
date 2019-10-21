@@ -1,5 +1,6 @@
 # Site Settings
 theme: bulma-clean-theme
+remote_theme: chrisrhymes/bulma-clean-theme
 title: Martoc's Blog
 tagline: Martoc's Blog
 description: >
