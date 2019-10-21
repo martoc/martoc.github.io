@@ -1,0 +1,49 @@
+# Site Settings
+theme: bulma-clean-theme
+title: Martoc's Blog
+tagline: Martoc's Blog
+description: >
+  My Blog
+url: "https://martoc.github.io"
+permalink: pretty
+#favicon: /path/to/favicon.png
+
+paginate: 5
+paginate_path: "/blog/page:num"
+
+plugins:
+  - jekyll-sitemap
+  - jekyll-paginate
+  - jekyll-feed
+  - jekyll-seo-tag
+  - kramdown
+  - rouge
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+
+livereload: true
+
+sass:
+  style: compressed
+  source_dir: _sass
+
+#google_analytics: UA-code-here
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      show_sidebar: true
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      author: "martoc"
+      layout: post
+      show_sidebar: true
+
+markdown: kramdown
+highlighter: rouge
