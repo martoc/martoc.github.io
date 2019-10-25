@@ -10,4 +10,4 @@ configure a NAT instance in our deployment. This Cloudformation configuration
 creates an Autoscaling group of 1 (it's fault-tolerant and no highly available),
 when the instance is created the user data section hooks an EIP.
 
-![Deployment](/images/blog/nat-instance-1.0.png)
+![Deployment](/blog/images/nat-instance-1.0.png)
