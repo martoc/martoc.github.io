@@ -2,7 +2,7 @@
 title: Creating a fault-tolerant NAT instance in AWS
 layout: post
 author: martoc
-image: https://martoc.london/images/nat-instance-1.0.png
+image: https://martoc.london/blog/images/nat-instance-1.0.png
 ---
 
 With NAT Gateway this looks like something of the past, but recently I had to
