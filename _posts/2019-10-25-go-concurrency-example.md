@@ -3,5 +3,5 @@ title: A simple Go program with concurrency
 subtitle: Go Routines and Channels
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/golang.png
+image: https://martoc.london/blog/images/golang.jpg
 ---
