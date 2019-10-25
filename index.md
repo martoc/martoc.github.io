@@ -1,5 +1,5 @@
 ---
-title: Cloud Architecture
+title: Cloud Architecture Notepad
 subtitle: Creating fault-tolerant, highly available and maintainable deployments
 layout: page
 show_sidebar: true
