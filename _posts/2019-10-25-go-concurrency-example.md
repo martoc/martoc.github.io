@@ -1,5 +1,5 @@
 ---
-title: A simple Go program with concurrency
+title: A simple Go program that uses concurrency
 subtitle: Go Routines and Channels
 layout: post
 author: martoc
