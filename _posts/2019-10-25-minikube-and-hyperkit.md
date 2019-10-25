@@ -6,8 +6,6 @@ author: martoc
 image: https://martoc.london/blog/images/k8s.png
 ---
 
-# Introduction
-
 I've got some problems with Minikube and Virtualbox, everytime I close my laptop
 it stops working and I need to restart, delete, start, reboot, etc. it's not
 very stable for this use case. I've installed the HyperKit driver and configured
