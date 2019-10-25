@@ -13,12 +13,12 @@ I've been creating fault-tolerant and highly available cloud solutions that are
 deployed worldwide and are managed by very small teams. I'm sharing my
 experiences and some of the solutions that I have designed and implemented.
 
-In the last years, there have been some technologies that have brought my
-attention, first Golang, from a very strong background in low latency Java
-services, this new modern language brings a new set of possibilities to write
-very fast services, the power of C/C++ with a much easier easy way to develop.
-On the other hand, software distribution has been revolutionised tools like
-`Packer` or `Docker` that do not require any specific version of a virtual
+In the last years, there have been looking at some technologies that have
+brought my attention, first Golang, from a very strong background in low latency
+Java services, this new modern language brings a new set of possibilities to
+write very fast services, the power of C/C++ with a much easier easy way to
+develop. On the other hand, software distribution has been revolutionised tools
+like `Packer` or `Docker` that do not require any specific version of a virtual
 machine or interpreter installed, this gives a more reliable way to produce
 software.
 
