@@ -13,7 +13,7 @@ Minikube to use this instead the default Virtualbox.
 
 # Steps
 
-* First, install the HyperKit driver
+* First, install the HyperKit driver (<https://github.com/moby/hyperkit>)
 
 ```bash
 brew install hyperkit
@@ -37,4 +37,11 @@ setting the drive like this
 
 ```bash
 minikube start --vm-driver=hyperkit
+```
+If you were running Virtualbox before like me wipe out your `~/.minikube` and
+cluster configuration
+
+```bash
+minikube delete
+rm -rf ~/.minikube
 ```
