@@ -1,9 +1,13 @@
 ---
+title: Creating a fault-tolerant NAT instance in AWS
 layout: post
 author: martoc
+image: https://martoc.london/images/nat-instance-1.0.png
 ---
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Erat imperdiet sed euismod nisi porta lorem mollis aliquam ut.
 
-At lectus urna duis convallis convallis tellus id interdum. Et netus et malesuada fames ac turpis egestas integer eget. Egestas sed tempus urna et pharetra pharetra massa massa ultricies. Elementum pulvinar etiam non quam lacus suspendisse faucibus interdum. Tellus pellentesque eu tincidunt tortor aliquam nulla facilisi cras fermentum. Morbi enim nunc faucibus a pellentesque sit amet. Consequat id porta nibh venenatis cras sed felis eget. Cras semper auctor neque vitae. Consectetur libero id faucibus nisl tincidunt eget nullam non. Elementum curabitur vitae nunc sed. Lobortis elementum nibh tellus molestie nunc non blandit massa. Risus nullam eget felis eget nunc lobortis mattis aliquam. Diam quam nulla porttitor massa id. Lobortis elementum nibh tellus molestie. Scelerisque varius morbi enim nunc faucibus a. Nec feugiat nisl pretium fusce id velit ut tortor pretium. Amet porttitor eget dolor morbi non arcu risus quis varius. Egestas congue quisque egestas diam in arcu cursus euismod.
+With NAT Gateway this looks like something of the past, but recently I had to
+configure a NAT instance in our deployment. This Cloudformation configuration
+creates an Autoscaling group of 1 (it's fault-tolerant and no highly available),
+when the instance is created the user data section hooks an EIP.
 
-Neque viverra justo nec ultrices dui sapien eget. Auctor urna nunc id cursus. Diam volutpat commodo sed egestas egestas fringilla. Suspendisse sed nisi lacus sed viverra tellus in hac habitasse. In est ante in nibh. Diam ut venenatis tellus in metus vulputate eu. Mauris rhoncus aenean vel elit scelerisque mauris pellentesque. Proin sagittis nisl rhoncus mattis rhoncus. Integer vitae justo eget magna fermentum iaculis eu non. Pellentesque id nibh tortor id aliquet lectus proin nibh nisl. Ullamcorper morbi tincidunt ornare massa eget egestas purus. Nibh venenatis cras sed felis eget velit aliquet. Elementum curabitur vitae nunc sed velit dignissim.
+![My helpful screenshot](/images/nat-instance-1.0.png)
