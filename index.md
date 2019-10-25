@@ -1,6 +1,6 @@
 ---
-title: Martoc's Blog
-subtitle: My Blog
+title: martoc.london
+subtitle: AWS & K8s
 layout: page
 show_sidebar: true
 ---
