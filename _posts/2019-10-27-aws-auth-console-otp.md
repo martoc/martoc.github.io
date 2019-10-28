@@ -1,12 +1,15 @@
 ---
-title: Using aws-cli and MFA from the terminal
-subtitle: Configuring account and oathtool
+title: Using aws-cli and oathtool
+subtitle: Seamlessly two-factor authentication for the AWS CLI
 layout: post
 author: martoc
 image: https://martoc.london/blog/images/aws.png
 ---
 
-Installing oath-toolkit and configuring the AWS CLI to get OTP dynamically.
+Using two factor authentication with the AWS CLI is sometimes a pain, you need
+to get a new token every N minutes then parse the result of this operation and
+create the corresponding environment variables, I've installed the oath-toolkit
+and configured the AWS CLI to get these OTP dynamically.
 
 # Steps
 
