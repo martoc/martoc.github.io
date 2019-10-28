@@ -50,7 +50,7 @@ following policy
 ```
 * Create an API access key id and secret key <https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html#Using_CreateAccessKey>.
 
-* Configure the access key id and secret key calling this and Follow the
+* Configure the access key id and secret key calling this and follow the
 instructions.
 
 ```bash
