@@ -1,6 +1,6 @@
 ---
-title: Using aws-cli with OTP from the terminal
-subtitle: installing oath-toolkit
+title: Using aws-cli and MFA from the terminal
+subtitle: Configuring account and oathtool
 layout: post
 author: martoc
 image: https://martoc.london/blog/images/aws.png
