@@ -3,7 +3,7 @@ title: Using aws-cli with OTP from the terminal
 subtitle: installing oath-toolkit
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/nat-instance-1.0.png
+image: https://martoc.london/blog/images/aws.png
 ---
 
 Installing oath-toolkit and configuring the AWS CLI to get OTP dynamically.
