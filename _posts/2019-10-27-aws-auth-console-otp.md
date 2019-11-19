@@ -70,3 +70,28 @@ aws sts get-session-token --region us-east-1 --serial-number arn:aws:iam::<ACCOU
 
 * The output of the previous command returns a credential for accessing the AWS
 API.
+
+* Install jq.
+
+```bash
+brew install jq
+```
+
+* Add the following function in your ``~/.zshrc`.
+
+```bash
+aws-login() {
+  OUTPUT=$(aws sts get-session-token --region us-east-1 --serial-number arn:aws:iam::<ACCOUNT_ID>:mfa/<USERNAME> --token-code $(oathtool --base32 --totp $(cat ~/.aws-mfa)))
+  export AWS_ACCESS_KEY_ID=$(echo $OUTPUT | jq .Credentials.AccessKeyId --raw-output)
+  export AWS_SECRET_ACCESS_KEY=$(echo $OUTPUT | jq .Credentials.SecretAccessKey --raw-output)
+  export AWS_SESSION_TOKEN=$(echo $OUTPUT | jq .Credentials.SessionToken --raw-output)
+  export AWS_SECURITY_TOKEN=$AWS_SESSION_TOKEN
+}
+```
+
+* You can open a new terminal and execute the following command to authenticate
+to your account.
+
+```bash
+aws-login
+```
