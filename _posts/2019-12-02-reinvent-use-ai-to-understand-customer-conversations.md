@@ -20,3 +20,9 @@ diagram shows the main components and how these interact with each other.
 From my point of view the transcription is the hack that allows us to use our
 current knowledge in NLP which is completely based on written text, I guess in
 the next year the processing will be direct from audio.
+
+One nice feature that I wasn't aware of is that QuickSight now support more
+datasource types, in this particular case it can read from S3 and show insights,
+these are the current dataset that it supports
+
+![QuickSight](/blog/images/use-ai-to-understand-customer-conversations-quicksight.png)
