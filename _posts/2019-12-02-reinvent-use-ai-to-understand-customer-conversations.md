@@ -1,6 +1,6 @@
 ---
 title: Use AI to understand customer conversations
-subtitle: have We been monitored?
+subtitle: Call centres, audio transcription and NLP
 layout: post
 author: martoc
 image: https://martoc.london/blog/images/use-ai-to-understand-customer-conversations.png
