@@ -6,7 +6,7 @@ author: martoc
 image: https://martoc.london/blog/images/aws.png
 ---
 
-This tool provides static code analysis into your cloudformation templates,
+This tool provides static code analysis into your Cloudformation templates,
 enforcing these checks in your code will allow infrastructure developers to
 create better templates.
 
@@ -16,7 +16,8 @@ Install the tool
 pip install cfn-lint
 ```
 
-Then you can run it to check your templates, it supports YAML and JSON templates
+Then you can run it to check your templates, it supports `YAML` and `JSON`
+templates
 
 ```bash
 cfn-lint my-template.json
@@ -65,7 +66,7 @@ nat.json:208:13
 ```
 
 I fixed these violations and integrated the tool using GitHub Actions. This is
-the action file, I'm using the action created by scottbrenner.
+the action file, I'm using an action created by scottbrenner.
 
 ```yaml
 name: Cloudformation
