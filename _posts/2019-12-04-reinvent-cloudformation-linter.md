@@ -23,10 +23,10 @@ templates
 cfn-lint my-template.json
 ```
 
-the result is output to the console and the $? return a non zero code which is
-perfect to integrate it in a pipeline to check pull requests. I've integrated
-this linter into my NAT project <https://github.com/martoc/nat>, when I ran it
-locally I've got many violations
+The result is output to the console and the command returns a non zero code
+what is perfect to integrate it in a pipeline to check pull requests. I've
+integrated this linter into my NAT project <https://github.com/martoc/nat>, when
+I ran it locally I've got many violations
 
 ```
 (aws) C02XH2HSJGH6:nat martoc$ cfn-lint nat.json
