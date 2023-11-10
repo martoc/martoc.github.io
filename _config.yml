@@ -1,10 +1,10 @@
 # Site Settings
 remote_theme: chrisrhymes/bulma-clean-theme
-title: martoc.london
-tagline: martoc.london
+title: martoc.github.io
+tagline: martoc.github.io
 description: >
   AWS & K8s
-url: "https://martoc.london"
+url: "https://martoc.github.io"
 permalink: pretty
 #favicon: /path/to/favicon.png
 
