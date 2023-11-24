@@ -7,31 +7,12 @@ show_sidebar: true
 
 # Abstract
 
-My job has been converting technical requirements of a project into
-the architecture and design that will guide the final product. For many years,
-I've been creating fault-tolerant and highly available cloud solutions that are
-deployed worldwide and are managed by very small teams. I'm sharing my
-experiences and some of the solutions that I have designed and implemented.
+My role involves translating the technical requirements of a project into its architectural and design framework, which essentially shapes the final product. Over the years, I've specialized in creating cloud solutions that are fault-tolerant, highly available, deployed globally, and managed by small teams. I aim to share my experiences and some of the solutions I've designed and implemented.
 
-In the last years, there have been looking at some technologies that have
-brought my attention, first Golang, from a very strong background in low latency
-Java services, this new modern language brings a new set of possibilities to
-write very fast services, the power of C/C++ with a much easier easy way to
-develop. On the other hand, software distribution has been revolutionised tools
-like `Packer` or `Docker` that do not require any specific version of a virtual
-machine or interpreter installed, this gives a more reliable way to produce
-software.
+Recently, I've been exploring certain technologies that have captured my attention. Firstly, Golang has piqued my interest. Coming from a strong background in low-latency Java services, this modern language offers a new realm of possibilities to develop exceptionally fast services. It combines the power of C/C++ with a more user-friendly development approach. Additionally, there's been a revolution in software distribution with tools like Packer or Docker, eliminating the need for specific versions of virtual machines or interpreters. This significantly enhances the reliability of software production.
 
-I see, it has been as a cycle, We knew that C/C++ was the language to produce
-very fast services but maintenance, learning and even compiling it wasn't the
-best solution, now We are in another era in which internet and Github join
-forces to make software sharing easier to everyone and Go uses this to produce
-a binary that can be run in any supported OS.
+I perceive this as a cyclic evolution. Previously, C/C++ was recognized as the language for high-speed services, yet its maintenance, learning curve, and compilation posed challenges. Presently, we're in an era where the internet and platforms like Github collaborate to facilitate easier software sharing. Go leverages this environment, producing a binary executable that can run on any supported operating system.
 
-The other tech stack is Kubernetes (K8s), for years working on Cloud
-environments I see that the benefits of running Kubernetes are huge, from cost
-savings to faster software development. I am currently on the path of a
-migration of a very large platform with multiple different types of workloads,
-APIs, UIs, batch processing and low latency services, I'll sharing this journey.
+Another significant technology stack I've been involved with is Kubernetes (K8s). Having worked extensively in cloud environments, I've witnessed the substantial benefits of implementing Kubernetes, ranging from cost efficiencies to accelerated software development. Currently, I'm engaged in migrating a sizable platform comprising various workloads, including APIs, UIs, batch processing, and low-latency services. I intend to document and share this ongoing journey.
 
-Hopefully this blog will help someone.
+I hope that this blog proves beneficial to someone navigating similar technological landscapes.
