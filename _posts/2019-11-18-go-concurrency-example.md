@@ -3,7 +3,7 @@ title: A simple Go program that uses concurrency
 subtitle: Go Routines and Channels
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/golang.jpg
+image: https://martoc.github.io/blog/images/golang.jpg
 ---
 
 Go supports multiple concurrency models, this diagram shows what actually want

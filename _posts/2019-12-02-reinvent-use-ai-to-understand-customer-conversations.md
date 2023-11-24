@@ -3,7 +3,7 @@ title: Use AI to understand customer conversations
 subtitle: Call centres, audio transcription and NLP
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/use-ai-to-understand-customer-conversations.png
+image: https://martoc.github.io/blog/images/use-ai-to-understand-customer-conversations.png
 ---
 
 I attended this workshop today, I learnt that AWS provides a full stack of

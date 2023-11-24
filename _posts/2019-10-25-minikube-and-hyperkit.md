@@ -3,7 +3,7 @@ title: Installing Minikube and Hyperkit
 subtitle: bye bye Virtualbox
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/k8s.png
+image: https://martoc.github.io/blog/images/k8s.png
 ---
 
 I've got some problems with Minikube and Virtualbox, everytime I close my laptop

@@ -3,7 +3,7 @@ title: Using aws-cli and oathtool
 subtitle: Seamlessly two-factor authentication for the AWS CLI
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/aws.png
+image: https://martoc.github.io/blog/images/aws.png
 ---
 
 Using two factor authentication with the AWS CLI is sometimes a pain, you need

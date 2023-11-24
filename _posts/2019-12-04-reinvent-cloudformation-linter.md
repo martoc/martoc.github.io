@@ -3,7 +3,7 @@ title: Using Cloudformation Linter
 subtitle: cfn-lint
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/aws.png
+image: https://martoc.github.io/blog/images/aws.png
 ---
 
 This tool provides static code analysis into your Cloudformation templates,

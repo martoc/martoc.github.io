@@ -3,7 +3,7 @@ title: Nitro
 subtitle: Deep dive
 layout: post
 author: martoc
-image: https://martoc.london/blog/images/aws.png
+image: https://martoc.github.io/blog/images/aws.png
 ---
 
 It based on cards, there are four different card types depending of the
