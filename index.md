@@ -1,6 +1,6 @@
 ---
 title: Cloud Architecture Notepad
-subtitle: Creating fault-tolerant, highly available and maintainable deployments
+subtitle: Creating fault-tolerant, highly available and maintainable workloads
 layout: page
 show_sidebar: true
 ---
