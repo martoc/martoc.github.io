@@ -26,6 +26,8 @@ In conclusion, while traditional VPN services like NordVPN offer strong security
 
 The following example [martoc/vpn-client](https://github.com/martoc/vpn-client) demostrates how to create a VPN client in AWS:
 
+![Deployment Diagram](/blog/images/client-vpn-scenario-igw.png)
+
 You need a VPC in AWS and a VPN client to connect to the VPC. This document describes how to create a VPC and VPN client configuration in AWS.
 
 1. Create VPC (Optional)
