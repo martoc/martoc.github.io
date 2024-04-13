@@ -1,6 +1,6 @@
 ---
 title: Analysis of Github Actions
-subtitle: enforcing CICD immutability of your workflows
+subtitle: enforcing immutability in your workflows
 layout: post
 author: martoc
 image: https://martoc.github.io/blog/images/github.webp
