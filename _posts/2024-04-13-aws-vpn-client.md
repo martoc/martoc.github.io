@@ -3,7 +3,7 @@ title: AWS VPN Client
 subtitle: Elastic VPN Client for AWS
 layout: post
 author: martoc
-image: https://martoc.github.io/blog/images/aws.png
+image: https://martoc.github.io/blog/images/client-vpn-scenario-igw.png
 ---
 
 Amazon Web Services (AWS) offers a VPN Client that is particularly advantageous for organizations seeking scalable and secure connectivity solutions compared to traditional VPN services like NordVPN. This distinction is largely due to the inherent flexibility and elasticity of cloud-based services provided by AWS, tailored to meet the dynamic requirements of modern businesses.
@@ -30,7 +30,7 @@ The following example [martoc/vpn-client](https://github.com/martoc/vpn-client) 
 
 You need a VPC in AWS and a VPN client to connect to the VPC. This document describes how to create a VPC and VPN client configuration in AWS.
 
-1. Create VPC (Optional)
+## Create VPC (Optional)
 
 An existing VPC could be used to create the VPN client. If you don't have a VPC, you can create one using the following command:
 
@@ -38,7 +38,7 @@ An existing VPC could be used to create the VPN client. If you don't have a VPC,
 aws cloudformation create-stack --stack-name vpn-vpc --template-body file://src/cloudformation/vpn-vpc.yaml --region us-east-2
 ```
 
-2. Create certificates for multual TLS
+## Create certificates for multual TLS
 
 This document describes how to create certificates for mutual TLS. The same certificate could be used in multiple regions.
 
@@ -47,23 +47,24 @@ git clone https://github.com/OpenVPN/easy-rsa.git
 src/scripts/generate.sh
 ```
 
-3. Import certificates into AWS ACM
+## Import certificates into AWS ACM
 
 ```bash
 aws acm import-certificate --certificate fileb://workdir/server.crt --private-key fileb://workdir/server.key --certificate-chain fileb://workdir/ca.crt --region us-east-2
 ```
 
-4. Create vpn-client stack
+## Create vpn-client stack
 
 ```bash
 aws cloudformation create-stack --stack-name vpn-client --template-body file://src/cloudformation/vpn-client.yaml --parameters "ParameterKey=ServerCertificateArn,ParameterValue=arn:aws:acm:*******:************:certificate/*********-****-****-****-*************" --region us-east-2
 ```
 
-5. Configure AWS VPN Client
+## Configure AWS VPN Client
 
 * Download the configuration file from the AWS Console
 * Update the configuration file with the client certificate `workdir/client.crt` and client key `workdir/client.key` adding this section to the configuration file below the `<ca></ca>` section
-```
+
+```bash
 <cert>
 -----BEGIN CERTIFICATE-----
 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -103,7 +104,7 @@ XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 * Configure the OpenVPN client with the configuration file
 * Connect to the VPN
 
-6. Connect your iOS device to the VPN (Optional)
+## Connect your iOS device to the VPN (Optional)
 
 * Download [OpenVPN Connect](https://apps.apple.com/us/app/openvpn-connect-openvpn-app/id590379981) from the App Store
 * Share the configuration file with the iOS device and open it with OpenVPN Connect
