@@ -1,6 +1,6 @@
 ---
-title: AWS KMS Key Replication: Understanding Its Implications
-subtitle: Demystify the AWS KMS replication capabilities.
+title: AWS KMS Key Replication
+subtitle: Understanding Its Implications
 layout: post
 author: martoc
 image: https://martoc.github.io/blog/images/aws.png
