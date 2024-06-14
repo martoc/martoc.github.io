@@ -16,7 +16,7 @@ At its core, replication in AWS KMS creates a duplicate key with the same key ma
 
 One significant limitation of KMS key replication is the lack of support for policy replication and I guess the reason is that AWS does not automatically rewrite policies to comply with regional requirements. For example, if a KMS key in region-1 is permitted to be used by a certain AWS resource, replicating this key to region-2 will not adjust the policy to match the new region. Consequently, manual adjustment of these policies is necessary, which could lead to configuration drift between regions. The image below illustrates how the replication process includes a warning about access policy differences. In a specific example, I created a key in eu-west-1 and replicated it to eu-west-2, where I modified the policy in the replication configuration, resulting in different access policies for the same key across two regions.
 
-![KMS Key Replication](/blog/images/kms-replication.png)
+![KMS Key Replication](/blog/images/kms-replication-updated.png)
 
 To address this challenge, the recommended approach is to utilise Infrastructure as Code (IaC) tools such as AWS CloudFormation or Terraform. These tools allow you to create templates or modules that configure your KMS keys consistently across all regions, ensuring a single source of truth for your policies. This method guarantees that your policies remain uniform and compliant, effectively reducing the risk of configuration drift.
 
