@@ -12,10 +12,34 @@ jobs:
         fetch-tags: true
     - name: Tag
       uses: martoc/action-tag@v0
-    - name: Build the site in the jekyll/builder container
-      run: |
-        docker run \
-        -v ${{ github.workspace }}:/srv/jekyll -v ${{ github.workspace }}/_site:/srv/jekyll/_site \
-        jekyll/builder:4.2.2 /bin/bash -c "chmod 777 /srv/jekyll && jekyll build --future"
-    - name: Release on GitHub
-      uses: martoc/action-release@v0
+    - name: Setup Ruby
+      uses: ruby/setup-ruby@8575951200e472d5f2d95c625da0c7bec8217c42 # v1.161.0
+      with:
+        ruby-version: '3.1' # Not needed with a .ruby-version file
+        bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+        cache-version: 0 # Increment this number if you need to re-download cached gems
+    - name: Setup Pages
+      id: pages
+      uses: actions/configure-pages@v5
+    - name: Build with Jekyll
+      # Outputs to the './_site' directory by default
+      run: bundle exec jekyll build --baseurl "${{ steps.pages.outputs.base_path }}"
+      env:
+        JEKYLL_ENV: production
+    - name: Upload artifact
+      # Automatically uploads an artifact from the './_site' directory by default
+      uses: actions/upload-pages-artifact@v3
+
+# Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-22.04
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Release on GitHub
+        uses: martoc/action-release@v0
