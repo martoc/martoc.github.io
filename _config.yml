@@ -1,11 +1,16 @@
-title: martoc
+title: martoc.github.io
 description: >- # this means to ignore newlines until "baseurl:"
   Notes about AWS, K8s, AI and Data
 url: "https://martoc.github.io"
 github_username:  martoc
+permalink: pretty
+paginate: 5
+paginate_path: "/blog/page:num"
+
+google_analytics: G-TRCR5NDSVF
 
 # Build settings
-theme: minima
+theme: bulma-clean-theme
 plugins:
   - jekyll-feed
 
@@ -20,3 +25,17 @@ exclude:
   - vendor/cache/
   - vendor/gems/
   - vendor/ruby/
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      show_sidebar: true
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      author: "martoc"
+      layout: post
+      show_sidebar: true
