@@ -1,6 +1,6 @@
 ---
 title: AWS KMS Key Replication
-subtitle: Understanding Its Implications`
+subtitle: Understanding Its Implications
 layout: post
 author: martoc
 image: https://martoc.github.io/blog/images/aws.png
