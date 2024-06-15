@@ -11,6 +11,8 @@ google_analytics: G-TRCR5NDSVF
 
 # Build settings
 theme: bulma-clean-theme
+force_theme: light
+gh_sponsor: martoc
 plugins:
   - jekyll-feed
 
