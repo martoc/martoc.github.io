@@ -1,6 +1,6 @@
 ---
 title: Cloud Architecture Notepad
-subtitle: Creating fault-tolerant, highly available and maintainable deployments
+subtitle: Notes about AWS, K8s, AI and Data
 layout: page
 show_sidebar: true
 ---
