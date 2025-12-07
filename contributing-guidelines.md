@@ -36,7 +36,7 @@ If you find a bug, please open an issue with:
 
 - A clear, descriptive title
 - Steps to reproduce the issue
-- Expected vs actual behavior
+- Expected vs actual behaviour
 - Your environment details (OS, version, etc.)
 
 ### Suggesting Features
