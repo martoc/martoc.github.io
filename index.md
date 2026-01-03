@@ -1,6 +1,6 @@
 ---
 title: Cloud Architecture Notepad
-subtitle: Notes about AWS, K8s, AI and Data
+subtitle: Notes about AWS, GCP, K8s, AI and Data
 layout: page
 show_sidebar: true
 ---

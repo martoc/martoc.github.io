@@ -1,8 +1,8 @@
 title: martoc.github.io
 description: >- # this means to ignore newlines until "baseurl:"
-  Notes about AWS, K8s, AI and Data
+  Notes about AWS, GCP, K8s, AI and Data
 url: "https://martoc.github.io"
-github_username:  martoc
+github_username: martoc
 permalink: pretty
 paginate: 5
 paginate_path: "/blog/page:num"
