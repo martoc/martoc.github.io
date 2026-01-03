@@ -23,16 +23,16 @@ The framework addresses these challenges through three layers of abstraction:
 
 ```text
 ┌─────────────────────────────────────────────────────────┐
-│                  Reusable Workflows                      │
+│                  Reusable Workflows                     │
 │  (workflow-github-actions, workflow-infrastructure,     │
 │   workflow-container-image, workflow-helm-chart,        │
 │   workflow-workload)                                    │
 ├─────────────────────────────────────────────────────────┤
-│                   GitHub Actions                         │
+│                   GitHub Actions                        │
 │  (action-tag, action-release, action-container-build,   │
 │   action-helm-build, action-deploy, etc.)               │
 ├─────────────────────────────────────────────────────────┤
-│                  Tool Containers                         │
+│                  Tool Containers                        │
 │  (container-terraform-tools, container-cloudformation-  │
 │   tools)                                                │
 └─────────────────────────────────────────────────────────┘
