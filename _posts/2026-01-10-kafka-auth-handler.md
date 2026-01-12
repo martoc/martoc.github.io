@@ -6,11 +6,11 @@ author: martoc
 image: https://martoc.github.io/blog/images/aws.png
 ---
 
-Back in December 2024, I wrote about [gcp-kafka-auth-handler](/blog/2024/12/09/gcp-kafka-auth-handler/), a utility I created to bridge the authentication gap between Apache Beam Dataflow and GCP Managed Kafka. Since then, the project has evolved significantly as part of our broader multi-cloud journey. Today, I'm pleased to announce that the library has been renamed to [kafka-auth-handler](https://github.com/martoc/kafka-auth-handler) and now supports both GCP and AWS MSK.
+Back in December 2024, I wrote about [gcp-kafka-auth-handler](https://martoc.github.io/2024/12/09/gcp-kafka-auth-handler/), a utility I created to bridge the authentication gap between Apache Beam Dataflow and GCP Managed Kafka. Since then, the project has evolved significantly as part of our broader multi-cloud journey. Today, I'm pleased to announce that the library has been renamed to [kafka-auth-handler](https://github.com/martoc/kafka-auth-handler) and now supports both GCP and AWS MSK.
 
 ## The Journey to Multi-Cloud
 
-As outlined in my recent post on [building an open deployment framework](/blog/2026/01/03/open-deployment-framework/), we've been working towards supporting multiple cloud providers across our tooling. The kafka-auth-handler is a natural extension of this effort.
+As outlined in my recent post on [building an open deployment framework](https://martoc.github.io/2026/01/03/open-deployment-framework/), we've been working towards supporting multiple cloud providers across our tooling. The kafka-auth-handler is a natural extension of this effort.
 
 When we began migrating workloads to AWS, we encountered the same authentication challenge with Amazon MSK that we'd previously solved for GCP Managed Kafka. MSK supports IAM authentication, but Apache Beam's Kafka connector still requires an external OAuth token endpoint. Rather than creating a separate tool, it made sense to extend the existing solution.
 
