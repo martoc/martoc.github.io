@@ -154,6 +154,6 @@ If you're currently using the GCP-only version, migration is straightforward:
 
 The evolution from gcp-kafka-auth-handler to kafka-auth-handler reflects our ongoing journey towards a truly multi-cloud architecture. What started as a workaround for GCP Managed Kafka authentication has grown into a unified solution supporting both major cloud providers.
 
-This update is part of a broader effort to ensure our tooling works consistently across cloud platforms, complementing the [open deployment framework](/blog/2026/01/03/open-deployment-framework/) we've built for CI/CD.
+This update is part of a broader effort to ensure our tooling works consistently across cloud platforms, complementing the [open deployment framework](/2026/01/03/open-deployment-framework/) we've built for CI/CD.
 
 The project remains open source under the MIT licence. Check out the [repository](https://github.com/martoc/kafka-auth-handler) for the latest updates and feel free to contribute.
