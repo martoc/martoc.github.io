@@ -139,10 +139,11 @@ That's starting to change. More and more projects publish documentation in forms
 - **Markdown versions of pages**, served next to the HTML, so a model gets the content without the chrome.
 - **`llms.txt`**, a [proposed convention](https://llmstxt.org/) for a curated, Markdown index of a site's most important documentation, placed where an AI agent knows to look.
 - **Token-efficient formats** such as [TOON](https://github.com/toon-format/toon) (Token-Oriented Object Notation), which carry structured data in fewer tokens than JSON.
+- **Official, hosted MCP servers** run by the vendors themselves. AWS offers the [AWS Knowledge MCP server](https://awslabs.github.io/mcp/servers/aws-knowledge-mcp-server) for searching and reading its documentation, and it's available as a ready-made connector in Claude. Microsoft does the same for its documentation with the [Microsoft Learn MCP server](https://github.com/MicrosoftDocs/mcp). There's nothing to install or run: you connect, and the publisher keeps the content current.
 
-When authoritative documentation is published this way, at a predictable address and in a format a model can read cheaply, much of what my documentation servers do becomes unnecessary. An agent could fetch the official source directly and trust it.
+When authoritative documentation is published this way, at a predictable address and in a format a model can read cheaply, much of what my documentation servers do becomes unnecessary. An agent could fetch the official source directly and trust it. A vendor-hosted MCP server goes one step further, because the people who write the docs also serve them.
 
-We're not there yet. Coverage is patchy, conventions are still settling, and a model fetching pages on its own still has to work out which sources are authoritative. Until AI-friendly documentation is the norm, the do-it-yourself approach fills the gap: index the official docs, serve them through MCP, and make them cheap to keep within reach. That's why these servers exist, and why Reveille exists to share them.
+We're not there yet. Coverage is patchy, and most projects, especially open-source tools like Helm, Spark or Karpenter, don't host anything like this. Conventions are still settling, and a model fetching pages on its own still has to work out which sources are authoritative. Until AI-friendly documentation is the norm, the do-it-yourself approach fills the gap: index the official docs, serve them through MCP, and make them cheap to keep within reach. That's why these servers exist, and why Reveille exists to share them.
 
 If the web catches up and makes them redundant, I'll happily retire them. That would be the best outcome.
 
