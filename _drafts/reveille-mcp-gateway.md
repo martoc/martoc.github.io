@@ -57,7 +57,7 @@ Three ideas do most of the work:
 
 - **One shared copy of every server.** However many sessions you open, each server runs at most once. Fifty sessions talking to the Helm documentation server share a single instance, so your memory no longer depends on how many terminals you have open.
 - **Servers sleep when nobody is using them.** A server starts on the first real call and stops after a period of inactivity. A typical day might wake four or five servers, while the rest never start at all. When everything is asleep, only the gateway runs.
-- **Connecting never wakes anyone up.** When a client connects, it asks every server for its list of tools. Done naively, that alone would wake every server every time you open a session. Reveille remembers each server's tools, so connecting is instant and free, and a server wakes only when the model actually wants to *use* it.
+- **Connecting never wakes anyone up.** When a client connects, it asks every server for its list of tools. Done naively, that alone would wake every server every time you open a session. Reveille remembers each server's tools after it first meets them, so from then on connecting is instant and free, and a server wakes only when the model actually wants to *use* it.
 
 ## How it works
 
@@ -103,7 +103,7 @@ The core of Reveille doesn't know where it's running. It depends on two things: 
 |------------|-----------------------|
 | **Shared servers** | Each server runs at most once, whatever the number of sessions. |
 | **Sleep and wake on demand** | Servers start on the first real call and stop after a configurable idle time. |
-| **Tool catalogue** | Connecting and listing tools never starts a server, even after a restart. |
+| **Tool catalogue** | Once a server's tools are known, connecting and listing them never starts it, even after a restart. |
 | **Single front door** | One address with three tools (list the servers, list a server's tools, call a tool) reaches every server, so the model's context window stays small. You can still connect to servers directly. |
 | **Any MCP server** | Local programs, container images and remote HTTP servers work unchanged, including third-party servers. |
 | **Keeps clients waiting politely** | Requests are held with keep-alives and progress while a server wakes, so clients don't time out. |
