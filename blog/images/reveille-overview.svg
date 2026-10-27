@@ -1,0 +1,122 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 490" width="960" height="490" role="img" aria-labelledby="title desc">
+  <title id="title">How Reveille shares MCP servers</title>
+  <desc id="desc">Many AI sessions connect to one Reveille gateway. The gateway checks a token, answers tool listings from a cache, offers a single front door and wakes servers on demand. Each server runs at most once: two are awake and shared by every session, the rest are asleep and use no memory.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#6b7280"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#059669"/>
+    </marker>
+  </defs>
+  <style>
+    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; fill: #1f2937; }
+    .heading { font-size: 15px; font-weight: 700; fill: #374151; letter-spacing: 0.02em; }
+    .label { font-size: 14px; }
+    .strong { font-size: 14px; font-weight: 600; }
+    .detail { font-size: 12px; fill: #6b7280; }
+    .muted { fill: #9ca3af; }
+    .green { fill: #047857; }
+  </style>
+
+  <rect width="960" height="490" fill="#ffffff"/>
+
+  <!-- Column headings -->
+  <text class="heading" x="130" y="44" text-anchor="middle">Many sessions</text>
+  <text class="heading" x="465" y="44" text-anchor="middle">One gateway</text>
+  <text class="heading" x="825" y="44" text-anchor="middle">Shared servers</text>
+
+  <!-- Sessions -->
+  <g>
+    <rect x="40" y="70" width="180" height="48" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+    <text class="label" x="130" y="99" text-anchor="middle">Claude Code, terminal 1</text>
+    <rect x="40" y="136" width="180" height="48" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+    <text class="label" x="130" y="165" text-anchor="middle">Claude Code, terminal 2</text>
+    <rect x="40" y="202" width="180" height="48" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+    <text class="label" x="130" y="231" text-anchor="middle">Background agent</text>
+    <rect x="40" y="268" width="180" height="48" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-width="1.5"/>
+    <text class="label" x="130" y="297" text-anchor="middle">IDE assistant</text>
+    <rect x="40" y="334" width="180" height="48" rx="10" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <text class="label" x="130" y="363" text-anchor="middle" fill="#6b7280">… up to 50 sessions</text>
+  </g>
+
+  <!-- Sessions to gateway -->
+  <g fill="none" stroke="#9ca3af" stroke-width="1.5">
+    <path d="M222,94 C272,94 268,190 316,190" marker-end="url(#arrow)"/>
+    <path d="M222,160 C272,160 268,212 316,212" marker-end="url(#arrow)"/>
+    <path d="M222,226 C272,226 268,235 316,235" marker-end="url(#arrow)"/>
+    <path d="M222,292 C272,292 268,258 316,258" marker-end="url(#arrow)"/>
+    <path d="M222,358 C272,358 268,280 316,280" marker-end="url(#arrow)" stroke-dasharray="5 4"/>
+  </g>
+
+  <!-- Gateway -->
+  <g>
+    <rect x="320" y="70" width="290" height="330" rx="14" fill="#eef2ff" stroke="#4f46e5" stroke-width="2"/>
+    <text x="465" y="104" text-anchor="middle" font-size="20" font-weight="700" fill="#3730a3">Reveille</text>
+    <text class="detail" x="465" y="124" text-anchor="middle">MCP gateway</text>
+
+    <rect x="340" y="142" width="250" height="52" rx="8" fill="#ffffff" stroke="#c7d2fe"/>
+    <text class="strong" x="356" y="164">Token check</text>
+    <text class="detail" x="356" y="183">every request is authenticated</text>
+
+    <rect x="340" y="204" width="250" height="52" rx="8" fill="#ffffff" stroke="#c7d2fe"/>
+    <text class="strong" x="356" y="226">Remembered tool lists</text>
+    <text class="detail" x="356" y="245">connecting never wakes a server</text>
+
+    <rect x="340" y="266" width="250" height="52" rx="8" fill="#ffffff" stroke="#c7d2fe"/>
+    <text class="strong" x="356" y="288">Single front door</text>
+    <text class="detail" x="356" y="307">three tools reach every server</text>
+
+    <rect x="340" y="328" width="250" height="52" rx="8" fill="#ffffff" stroke="#c7d2fe"/>
+    <text class="strong" x="356" y="350">Wake and sleep</text>
+    <text class="detail" x="356" y="369">start on first call, stop when idle</text>
+  </g>
+
+  <!-- Gateway to servers -->
+  <g fill="none" stroke-width="1.5">
+    <path d="M612,92 L716,92" stroke="#059669" marker-end="url(#arrow-green)"/>
+    <path d="M612,146 L716,146" stroke="#059669" marker-end="url(#arrow-green)"/>
+    <path d="M612,200 L716,200" stroke="#d1d5db" stroke-dasharray="4 5"/>
+    <path d="M612,254 L716,254" stroke="#d1d5db" stroke-dasharray="4 5"/>
+    <path d="M612,308 L716,308" stroke="#d1d5db" stroke-dasharray="4 5"/>
+  </g>
+
+  <!-- Servers -->
+  <g>
+    <rect x="720" y="70" width="210" height="44" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+    <circle cx="740" cy="92" r="6" fill="#059669"/>
+    <text class="label" x="756" y="97">Kubernetes docs</text>
+    <text class="detail green" x="918" y="96" text-anchor="end">awake</text>
+
+    <rect x="720" y="124" width="210" height="44" rx="10" fill="#ecfdf5" stroke="#059669" stroke-width="1.5"/>
+    <circle cx="740" cy="146" r="6" fill="#059669"/>
+    <text class="label" x="756" y="151">Helm docs</text>
+    <text class="detail green" x="918" y="150" text-anchor="end">awake</text>
+
+    <rect x="720" y="178" width="210" height="44" rx="10" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <circle cx="740" cy="200" r="5.5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.5"/>
+    <text class="label muted" x="756" y="205">Spark docs</text>
+    <text class="detail muted" x="918" y="204" text-anchor="end">asleep</text>
+
+    <rect x="720" y="232" width="210" height="44" rx="10" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <circle cx="740" cy="254" r="5.5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.5"/>
+    <text class="label muted" x="756" y="259">Airflow docs</text>
+    <text class="detail muted" x="918" y="258" text-anchor="end">asleep</text>
+
+    <rect x="720" y="286" width="210" height="44" rx="10" fill="#f9fafb" stroke="#9ca3af" stroke-width="1.5" stroke-dasharray="5 4"/>
+    <circle cx="740" cy="308" r="5.5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.5"/>
+    <text class="label muted" x="756" y="313">ClickHouse docs</text>
+    <text class="detail muted" x="918" y="312" text-anchor="end">asleep</text>
+
+    <text class="detail" x="825" y="364" text-anchor="middle">+ 17 more, asleep</text>
+  </g>
+
+  <!-- Legend -->
+  <g>
+    <line x1="40" y1="428" x2="930" y2="428" stroke="#e5e7eb"/>
+    <circle cx="214" cy="462" r="6" fill="#059669"/>
+    <text class="label" x="228" y="467">Awake: one shared copy for every session</text>
+    <circle cx="556" cy="462" r="5.5" fill="#ffffff" stroke="#9ca3af" stroke-width="1.5"/>
+    <text class="label" x="570" y="467">Asleep: no memory used until called</text>
+  </g>
+</svg>
