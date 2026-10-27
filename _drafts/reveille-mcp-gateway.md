@@ -45,61 +45,128 @@ The two lessons together pointed to what I actually wanted:
 - **Shared**, like the facade, so the number of sessions doesn't matter.
 - **On demand**, like a single session, so idle servers cost nothing.
 
-## Introducing Reveille
+## What Reveille is
 
-[Reveille](https://github.com/martoc/reveille) is a gateway that sits between your AI clients and your MCP servers. The name comes from the bugle call that wakes soldiers in the morning, and that's exactly its job: **servers sleep until somebody needs them, then Reveille wakes them up.**
+[Reveille](https://github.com/martoc/reveille) is a gateway for MCP servers. It sits between your AI clients (Claude Code, Claude Desktop, IDE assistants, agents) and the MCP servers they use, and it makes those servers cheap to share.
+
+The name comes from the bugle call that wakes soldiers in the morning, and that's exactly its job: **servers sleep until somebody needs them, then Reveille wakes them up.**
 
 ![Many AI sessions connect to one Reveille gateway, which shares a single copy of each server: the servers in use are awake and the rest sleep until called](https://martoc.github.io/blog/images/reveille-overview.svg)
 
-Here's what it gives you.
+Three ideas do most of the work:
 
-### One shared copy of every server
+- **One shared copy of every server.** However many sessions you open, each server runs at most once. Fifty sessions talking to the Helm documentation server share a single instance, so your memory no longer depends on how many terminals you have open.
+- **Servers sleep when nobody is using them.** A server starts on the first real call and stops after a period of inactivity. A typical day might wake four or five servers, while the rest never start at all. When everything is asleep, only the gateway runs.
+- **Connecting never wakes anyone up.** When a client connects, it asks every server for its list of tools. Done naively, that alone would wake every server every time you open a session. Reveille remembers each server's tools, so connecting is instant and free, and a server wakes only when the model actually wants to *use* it.
 
-However many sessions you open, each server runs at most once. Fifty sessions talking to the Helm documentation server share a single instance. Your laptop's memory no longer depends on how many terminals you have open.
+## How it works
 
-### Servers sleep when nobody is using them
+You don't need to know any of this to use Reveille, but it helps explain why it behaves the way it does.
 
-Servers start on the first real request and go back to sleep after a period of inactivity. A typical day might wake four or five servers, while the rest never start at all. When everything is asleep, the only thing running is the gateway itself.
+### Every server gets its own address
 
-### Connecting never wakes anyone up
+Each server is published at its own path on the gateway, such as `/kubernetes-documentation` or `/helm-documentation`, using MCP's standard Streamable HTTP transport. To a client, it looks exactly like connecting to the server directly. It doesn't know or care that the server is shared, asleep or running somewhere else.
 
-When a client connects, it asks every server for its list of tools. With a naive approach, that alone would wake every server, every time you open a session. Reveille remembers each server's tools, so connecting and browsing what's available is instant and costs nothing. A server wakes only when the model actually wants to *use* it.
+### Many conversations share one connection
 
-### One front door with a small menu
+Behind each path, Reveille keeps a single connection to the real server and multiplexes every client's requests over it. It tags each request so the answer goes back to the session that asked, and leaves everything else in the message untouched. Progress updates and cancellations are routed the same way, so long-running calls behave as they would with a private server.
 
-Every server's tools take up space in the model's context window. With twenty servers that adds up, and it leaves less room for your actual work. Reveille can present all your servers through a single entry point with just three tools: list the sources, list a source's tools, and call one. The model discovers what it needs as it goes, and your context window stays clean.
+### A catalogue of every server's tools
 
-You can also connect to individual servers directly. You choose per client.
+The first time a server starts, Reveille records what it offers (its tools, prompts and resources) and keeps that catalogue on disk, or in the cluster on Kubernetes. From then on, clients connect, list and browse from the catalogue, even after the gateway restarts. When a server announces that its tools have changed, or its configuration changes, the catalogue is refreshed.
 
-### Works with the servers you already have
+### Waking up, exactly once
 
-Reveille doesn't ask anything of your MCP servers. Local programs, container images and remote HTTP servers all work unchanged, including third-party servers you didn't write. If it speaks MCP, Reveille can share it.
+When a call arrives for a sleeping server, Reveille starts it, and only once, even if twenty sessions ask at the same moment. While the server starts, the client's request is held open with regular keep-alive messages and a "starting server" progress note, so nothing times out. As soon as the server is ready, the real answer follows on the same connection. Typically this takes a couple of seconds.
 
-### From laptop to cluster, with the same behaviour
+### Going back to sleep
 
-Reveille runs in two places, and the behaviour is identical:
+Each request counts as activity. Once a server has gone a set time without any (fifteen minutes by default, configurable per server), Reveille stops it gracefully. A server is never stopped while a call is still in flight.
 
-- **On a laptop**, it reads a folder of simple configuration files and runs servers locally.
-- **On Kubernetes**, each server is declared as a resource. Reveille scales its workload from zero to one when it's needed and back to zero when it isn't. It's packaged as a Helm chart and works on any conformant cluster, whether managed, self-hosted or local.
+### Looking after fragile servers
 
-You can start on your laptop and move the same set of servers to a cluster later without changing how your clients connect.
+Some servers can only handle one call at a time. For those, Reveille queues the extra requests and keeps them alive while they wait, so the server isn't overwhelmed. If a server crashes, the calls in flight fail with the reason, including the exit code and the last thing the server said. Repeated failures back off gradually instead of restarting in a tight loop.
 
-### Secure by default
+### One core, several places to run
 
-A gateway that fronts tools for an AI deserves careful handling:
+The core of Reveille doesn't know where it's running. It depends on two things: somewhere to read the list of servers from, and a way to start and stop them. Swapping those two pieces is what lets the same gateway run in very different places:
 
-- Every request needs a token, and the gateway refuses to listen on a network address without one.
-- On a laptop, it only listens locally unless you tell it otherwise.
-- Browser-based requests from unexpected origins are rejected.
-- Credentials for servers such as Jira or GitHub come from the environment or Kubernetes secrets. They're never written into configuration, and request contents and secrets are never logged.
+![The same Reveille core runs on a laptop with servers as local processes, under Docker Compose with servers as sibling containers, and on Kubernetes with servers as Deployments scaled between zero and one](https://martoc.github.io/blog/images/reveille-runtimes.svg)
 
-### Honest when things go wrong
+- **On a laptop**, servers are defined in a folder of small configuration files, and each one runs as a local program: a container started with Docker, a Python tool through `uvx`, a Node.js package through `npx`, or anything else. Edit a file and Reveille picks up the change without a restart.
+- **Under Docker Compose**, the gateway itself runs in a container and starts each server as a sibling container next to it, on demand.
+- **On Kubernetes**, each server is declared as a custom resource. Reveille turns it into a Deployment kept at zero replicas, scales it to one when a call arrives and back to zero when it goes idle. A tiny adapter inside each server's pod turns a standard input/output server into an HTTP one, so any existing server image works unchanged. Each server's state (asleep, waking, ready or failed) shows up in the cluster, next to everything else you run.
 
-Waking a server can fail: an image that can't be pulled, a missing secret, a process that crashes on start. Reveille doesn't leave the model waiting on a vague timeout. It reports *why* the server couldn't start, in words that a human (or a model) can act on. Status, metrics and health checks show what's awake, what's asleep and how long each wake took.
+## Everything it does
 
-### Ready for the next version of MCP
+| Capability | What it means for you |
+|------------|-----------------------|
+| **Shared servers** | Each server runs at most once, whatever the number of sessions. |
+| **Sleep and wake on demand** | Servers start on the first real call and stop after a configurable idle time. |
+| **Tool catalogue** | Connecting and listing tools never starts a server, even after a restart. |
+| **Single front door** | One address with three tools (list the servers, list a server's tools, call a tool) reaches every server, so the model's context window stays small. You can still connect to servers directly. |
+| **Any MCP server** | Local programs, container images and remote HTTP servers work unchanged, including third-party servers. |
+| **Keeps clients waiting politely** | Requests are held with keep-alives and progress while a server wakes, so clients don't time out. |
+| **Queueing** | Servers that handle one call at a time get an orderly queue instead of being overwhelmed. |
+| **Clear failures** | A server that can't start says why, whether it's a missing image, a missing secret, a crash or a timeout, in words a person or a model can act on. |
+| **Crash recovery** | Failed servers back off gradually and recover on their own. |
+| **Both MCP revisions** | Clients can speak the established revision or the newest stateless one. Reveille translates for servers that only know the older one. |
+| **Secure by default** | A token on every request, local-only listening unless you choose otherwise, browser origin checks, secrets kept out of configuration, and nothing sensitive in the logs. |
+| **Live configuration** | Add, change or remove servers without restarting the gateway. A broken change is reported and the last good configuration keeps working. |
+| **Observability** | Prometheus metrics, health checks, and a live view of each server's state, wake time and activity. Servers can also be woken, put to sleep or refreshed by hand. |
+| **Runs anywhere** | On a laptop, under Docker Compose, or on any conformant Kubernetes cluster (managed, self-hosted or local), on Intel/AMD and ARM machines. |
 
-The MCP specification keeps evolving. Reveille speaks both the established revision and the newest one to clients, and translates for servers that only know the older one. Your clients can move to the new protocol without waiting for every server to catch up.
+## Getting started
+
+There are three ways to run Reveille. Pick the one that matches what you already have.
+
+### Docker Compose: the quickest start
+
+If you have Docker, you can run Reveille. This is the way I'd recommend for most people: no Kubernetes, no build, and the documentation servers from my previous post come ready to go.
+
+```sh
+git clone https://github.com/martoc/reveille && cd reveille/compose
+echo "REVEILLE_TOKEN=$(openssl rand -hex 32)" > .env
+docker compose up -d
+```
+
+That starts the gateway with a dozen documentation servers configured, all asleep. Each one starts as a container on its first call and is removed when idle. Adding a server is a five-line file in the `servers` folder.
+
+### On your laptop, natively
+
+Reveille is a single binary. Run on the host, it can start servers any way your machine can: Docker images, `uvx`, `npx` or a local program. This suits people who already run MCP servers as local commands and want to stop paying for them in every session.
+
+### On Kubernetes, with Helm or kustomize
+
+For a team, a home lab or anyone who already runs a cluster, Reveille installs with a Helm chart or a plain kustomize base. Servers are declared as Kubernetes resources, sleep at zero replicas, and are shared by every client that can reach the gateway:
+
+```sh
+helm install reveille oci://ghcr.io/martoc/charts/reveille \
+  --namespace reveille-system --create-namespace
+```
+
+```yaml
+apiVersion: reveille.martoc.io/v1alpha1
+kind: MCPServer
+metadata:
+  name: helm-documentation
+spec:
+  path: /helm-documentation
+  image: martoc/mcp-helm-documentation:latest
+  command: ["/app/.venv/bin/mcp-helm-documentation"]
+  idleTimeout: 15m
+```
+
+Credentials for registries and servers come from whatever the cluster already provides: node identities, pull secrets and Kubernetes Secrets. Reveille doesn't handle any cloud's credentials itself.
+
+### Connecting your AI client
+
+Whichever way you run it, connecting Claude Code is one line. Point it at the front door and every server is reachable through it:
+
+```sh
+claude mcp add --transport http reveille http://127.0.0.1:8808/mcp \
+  --header "Authorization: Bearer <your token>"
+```
 
 ## The results
 
@@ -149,6 +216,6 @@ If the web catches up and makes them redundant, I'll happily retire them. That w
 
 ## What's next
 
-Reveille is complete on laptops and on Kubernetes, and it has been rehearsed with the full set of 22 servers. The next step is running it on a small home cluster and measuring it there. After that, I plan to open-source it on GitHub.
+Reveille runs on laptops, under Docker Compose and on Kubernetes, and it has been rehearsed with the full set of 22 servers. The next step is running it on a small home cluster and measuring it there. After that, I plan to open-source it on GitHub, and I hope Docker Compose makes it easy for anyone to try.
 
 The [previous post](https://martoc.github.io/2026/02/13/mcp-servers-documentation/) ended with the idea that the future of AI-assisted development isn't AI that knows everything, but AI that knows where to look. Reveille is the practical follow-up. **The library stays open for every session, and the lights only come on in the rooms you're actually reading.**
