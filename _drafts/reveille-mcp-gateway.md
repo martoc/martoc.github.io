@@ -111,7 +111,7 @@ The core of Reveille doesn't know where it's running. It depends on two things: 
 | **Clear failures** | A server that can't start says why, whether it's a missing image, a missing secret, a crash or a timeout, in words a person or a model can act on. |
 | **Crash recovery** | Failed servers back off gradually and recover on their own. |
 | **Both MCP revisions** | Clients can speak the established revision or the newest stateless one. Reveille translates for servers that only know the older one. |
-| **Secure by default** | A token on every request, local-only listening unless you choose otherwise, browser origin checks, secrets kept out of configuration, and nothing sensitive in the logs. |
+| **Safe defaults** | Local-only listening unless you choose otherwise, browser origin checks, secrets kept out of configuration, nothing sensitive in the logs, and an optional access token for when you share the gateway beyond your own machine. |
 | **Live configuration** | Add, change or remove servers without restarting the gateway. A broken change is reported and the last good configuration keeps working. |
 | **Observability** | Prometheus metrics, health checks, and a live view of each server's state, wake time and activity. Servers can also be woken, put to sleep or refreshed by hand. |
 | **Runs anywhere** | On a laptop, under Docker Compose, or on any conformant Kubernetes cluster (managed, self-hosted or local), on Intel/AMD and ARM machines. |
@@ -126,7 +126,6 @@ If you have Docker, you can run Reveille. This is the way I'd recommend for most
 
 ```sh
 git clone https://github.com/martoc/reveille && cd reveille/compose
-echo "REVEILLE_TOKEN=$(openssl rand -hex 32)" > .env
 docker compose up -d
 ```
 
@@ -164,8 +163,7 @@ Credentials for registries and servers come from whatever the cluster already pr
 Whichever way you run it, connecting Claude Code is one line. Point it at the front door and every server is reachable through it:
 
 ```sh
-claude mcp add --transport http reveille http://127.0.0.1:8808/mcp \
-  --header "Authorization: Bearer <your token>"
+claude mcp add --transport http reveille http://127.0.0.1:8808/mcp
 ```
 
 ## The results
