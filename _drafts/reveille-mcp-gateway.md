@@ -104,7 +104,8 @@ The core of Reveille doesn't know where it's running. It depends on two things: 
 | **Shared servers** | Each server runs at most once, whatever the number of sessions. |
 | **Sleep and wake on demand** | Servers start on the first real call and stop after a configurable idle time. |
 | **Tool catalogue** | Once a server's tools are known, connecting and listing them never starts it, even after a restart. |
-| **Single front door** | One address with three tools (list the servers, list a server's tools, call a tool) reaches every server, so the model's context window stays small. You can still connect to servers directly. |
+| **One address per server** | Each server keeps its own address and its own tools, so clients connect to it as if it were running just for them. |
+| **Optional front door** | For large collections, one extra address with three tools (list the servers, list a server's tools, call a tool) reaches every server, so the model's context window stays small. |
 | **Any MCP server** | Local programs, container images and remote HTTP servers work unchanged, including third-party servers. |
 | **Keeps clients waiting politely** | Requests are held with keep-alives and progress while a server wakes, so clients don't time out. |
 | **Queueing** | Servers that handle one call at a time get an orderly queue instead of being overwhelmed. |
@@ -160,11 +161,16 @@ Credentials for registries and servers come from whatever the cluster already pr
 
 ### Connecting your AI client
 
-Whichever way you run it, connecting Claude Code is one line. Point it at the front door and every server is reachable through it:
+Whichever way you run it, you connect Claude Code to each server at its own address, exactly as you would connect to the server itself. In the Docker Compose setup every server's address is its name, so a short loop adds them all:
 
 ```sh
-claude mcp add --transport http reveille http://127.0.0.1:8808/mcp
+for f in servers/*.yaml; do
+  name=$(basename "$f" .yaml)
+  claude mcp add --scope user --transport http "$name" "http://127.0.0.1:8808/$name"
+done
 ```
+
+If you collect dozens of servers, you can instead add a single entry for the front door, `http://127.0.0.1:8808/mcp`, and let Claude discover the servers as it needs them.
 
 ## The results
 
