@@ -87,14 +87,13 @@ Each request counts as activity. Once a server has gone a set time without any (
 
 Some servers can only handle one call at a time. For those, Reveille queues the extra requests and keeps them alive while they wait, so the server isn't overwhelmed. If a server crashes, the calls in flight fail with the reason, including the exit code and the last thing the server said. Repeated failures back off gradually instead of restarting in a tight loop.
 
-### One core, several places to run
+### One core, two places to run
 
 The core of Reveille doesn't know where it's running. It depends on two things: somewhere to read the list of servers from, and a way to start and stop them. Swapping those two pieces is what lets the same gateway run in very different places:
 
-![The same Reveille core runs on a laptop with servers as local processes, under Docker Compose with servers as sibling containers, and on Kubernetes with servers as Deployments scaled between zero and one](https://martoc.github.io/blog/images/reveille-runtimes.svg)
+![The same Reveille core runs as a single binary on a laptop or server, with servers as Docker containers or local processes, and on Kubernetes with servers as Deployments scaled between zero and one](https://martoc.github.io/blog/images/reveille-runtimes.svg)
 
-- **On a laptop**, servers are defined in a folder of small configuration files, and each one runs as a local program: a container started with Docker, a Python tool through `uvx`, a Node.js package through `npx`, or anything else. Edit a file and Reveille picks up the change without a restart.
-- **Under Docker Compose**, the gateway itself runs in a container and starts each server as a sibling container next to it, on demand.
+- **On a laptop or a server**, Reveille is a single binary, and servers are defined in a folder of small configuration files. A server that names a container image runs as a Docker container, which Reveille creates, watches and removes itself by talking to Docker directly. Anything else runs as a local program: a Python tool through `uvx`, a Node.js package through `npx`, or whatever you like. Edit a file and Reveille picks up the change without a restart.
 - **On Kubernetes**, each server is declared as a custom resource. Reveille turns it into a Deployment kept at zero replicas, scales it to one when a call arrives and back to zero when it goes idle. A tiny adapter inside each server's pod turns a standard input/output server into an HTTP one, so any existing server image works unchanged. Each server's state (asleep, waking, ready or failed) shows up in the cluster, next to everything else you run.
 
 ## Everything it does
@@ -115,26 +114,26 @@ The core of Reveille doesn't know where it's running. It depends on two things: 
 | **Safe defaults** | Local-only listening unless you choose otherwise, browser origin checks, secrets kept out of configuration, nothing sensitive in the logs, and an optional access token for when you share the gateway beyond your own machine. |
 | **Live configuration** | Add, change or remove servers without restarting the gateway. A broken change is reported and the last good configuration keeps working. |
 | **Observability** | Prometheus metrics, health checks, and a live view of each server's state, wake time and activity. Servers can also be woken, put to sleep or refreshed by hand. |
-| **Runs anywhere** | On a laptop, under Docker Compose, or on any conformant Kubernetes cluster (managed, self-hosted or local), on Intel/AMD and ARM machines. |
+| **Runs anywhere** | As a single binary on Linux or macOS, or on any conformant Kubernetes cluster (managed, self-hosted or local), on Intel/AMD and ARM machines. |
 
 ## Getting started
 
-There are three ways to run Reveille. Pick the one that matches what you already have.
+There are two ways to run Reveille. Pick the one that matches what you already have.
 
-### Docker Compose: the quickest start
+### The binary: the quickest start
 
-If you have Docker, you can run Reveille. This is the way I'd recommend for most people: no Kubernetes, no build, and the documentation servers from my previous post come ready to go.
+If you have Docker, you can run Reveille. Download the binary for your machine from the latest release (Linux or macOS, Intel or ARM), and start it with the example servers:
 
 ```sh
-git clone https://github.com/martoc/reveille && cd reveille/compose
-docker compose up -d
+git clone https://github.com/martoc/reveille && cd reveille
+os=$(uname -s | tr '[:upper:]' '[:lower:]')
+arch=$(uname -m | sed 's/x86_64/amd64/; s/aarch64/arm64/')
+curl -fsSL -o reveille "https://github.com/martoc/reveille/releases/latest/download/reveille-$os-$arch"
+chmod +x reveille
+./reveille serve --config-dir examples/servers
 ```
 
-That starts the gateway with a dozen documentation servers configured, all asleep. Each one starts as a container on its first call and is removed when idle. Adding a server is a five-line file in the `servers` folder.
-
-### On your laptop, natively
-
-Reveille is a single binary. Run on the host, it can start servers any way your machine can: Docker images, `uvx`, `npx` or a local program. This suits people who already run MCP servers as local commands and want to stop paying for them in every session.
+That starts the gateway with the public documentation servers from my previous post configured, all asleep. Each one starts as a container on its first call and is removed when idle. Adding a server is a short file in the `examples/servers` folder, and the same file works unchanged on Kubernetes. Servers that aren't containers, such as `uvx` or `npx` tools, run as local programs.
 
 ### On Kubernetes, with Helm or kustomize
 
@@ -153,7 +152,7 @@ metadata:
 spec:
   path: /helm-documentation
   image: martoc/mcp-helm-documentation:latest
-  command: ["/app/.venv/bin/mcp-helm-documentation"]
+  command: ["/app/.venv/bin/mcp-helm-docs"]
   idleTimeout: 15m
 ```
 
@@ -161,10 +160,10 @@ Credentials for registries and servers come from whatever the cluster already pr
 
 ### Connecting your AI client
 
-Whichever way you run it, you connect Claude Code to each server at its own address, exactly as you would connect to the server itself. In the Docker Compose setup every server's address is its name, so a short loop adds them all:
+Whichever way you run it, you connect Claude Code to each server at its own address, exactly as you would connect to the server itself. In the example servers every server's address is its name, so a short loop adds them all:
 
 ```sh
-for f in servers/*.yaml; do
+for f in examples/servers/*.yaml; do
   name=$(basename "$f" .yaml)
   claude mcp add --scope user --transport http "$name" "http://127.0.0.1:8808/$name"
 done
@@ -220,6 +219,6 @@ If the web catches up and makes them redundant, I'll happily retire them. That w
 
 ## What's next
 
-Reveille runs on laptops, under Docker Compose and on Kubernetes, and it has been rehearsed with the full set of 22 servers. The next step is running it on a small home cluster and measuring it there. After that, I plan to open-source it on GitHub, and I hope Docker Compose makes it easy for anyone to try.
+Reveille runs as a single binary and on Kubernetes, and it has been rehearsed with the full set of 22 servers. The next step is running it on a small home cluster and measuring it there. After that, I plan to open-source it on GitHub, and I hope a single download makes it easy for anyone to try.
 
 The [previous post](https://martoc.github.io/2026/02/13/mcp-servers-documentation/) ended with the idea that the future of AI-assisted development isn't AI that knows everything, but AI that knows where to look. Reveille is the practical follow-up. **The library stays open for every session, and the lights only come on in the rooms you're actually reading.**
