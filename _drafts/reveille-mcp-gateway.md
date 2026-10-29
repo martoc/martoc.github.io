@@ -133,7 +133,7 @@ chmod +x reveille
 ./reveille serve --config-dir examples/servers
 ```
 
-That starts the gateway with the public documentation servers from my previous post configured, all asleep. Each one starts as a container on its first call and is removed when idle. Adding a server is a short file in the `examples/servers` folder, and the same file works unchanged on Kubernetes. Servers that aren't containers, such as `uvx` or `npx` tools, run as local programs.
+That starts the gateway with the public documentation servers configured, including the ones from my previous post, all asleep. Each one starts as a container on its first call and is removed when idle. Adding a server is a short file in the `examples/servers` folder, and the same file works unchanged on Kubernetes. Servers that aren't containers, such as `uvx` or `npx` tools, run as local programs.
 
 ### On Kubernetes, with Helm or kustomize
 
@@ -160,16 +160,39 @@ Credentials for registries and servers come from whatever the cluster already pr
 
 ### Connecting your AI client
 
-Whichever way you run it, you connect Claude Code to each server at its own address, exactly as you would connect to the server itself. In the example servers every server's address is its name, so a short loop adds them all:
+Whichever way you run it, you connect Claude Code to each server at its own address, exactly as you would connect to the server itself. In the example servers every server's address is its name, so a short loop adds every documentation server:
 
 ```sh
-for f in examples/servers/*.yaml; do
+for f in examples/servers/*-documentation.yaml; do
   name=$(basename "$f" .yaml)
   claude mcp add --scope user --transport http "$name" "http://127.0.0.1:8808/$name"
 done
 ```
 
 If you collect dozens of servers, you can instead add a single entry for the front door, `http://127.0.0.1:8808/mcp`, and let Claude discover the servers as it needs them.
+
+Claude Desktop starts its servers as local programs, so it reaches each address through [`mcp-remote`](https://github.com/geelen/mcp-remote), a small bridge, with one entry per server. Desktop keeps a connection open to each one, and Reveille answers it without waking the server, so a sleeping server still shows as available instead of looking down.
+
+### One gateway for all your machines
+
+I run a single Reveille on a small always-on machine at home and use it from my laptop and everything else. Listen on an address your other machines can reach, and point the clients at it. A [Tailscale](https://tailscale.com/) address keeps the gateway off the local network and the internet:
+
+```sh
+# On the always-on machine (its address, from: tailscale ip -4):
+./reveille serve --config-dir examples/servers --listen 100.101.102.103:8808
+
+# On each client machine, one entry per documentation server:
+for name in \
+  a2a-documentation airflow-documentation aws-documentation \
+  azure-documentation clickhouse-documentation cloudcustodian-documentation \
+  go-documentation helm-documentation karpenter-documentation \
+  keda-documentation kubernetes-documentation prometheus-documentation \
+  spark-documentation strimzi-documentation; do
+  claude mcp add --scope user --transport http "$name" "http://100.101.102.103:8808/$name"
+done
+```
+
+Every machine then shares the same sleeping servers and the same tool catalogue, and only the always-on machine pays for the servers that are awake. Authentication is off by default. If more people than you can reach that address, start the gateway with an access token and have each client send it.
 
 ## The results
 
